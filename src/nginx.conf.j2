@@ -1,16 +1,37 @@
-worker_processes auto;
+{#
+##### Commented
+#}
 
-events { }
+# NGINX configuration of the stream module which is used for 
+# handling TCP/UDP traffic, which is different from NGINX’s 
+# HTTP module that handles web traffic
 
-stream {
-    {% for dst in dest_array %}
+worker_processes auto;          # Sets the number of worker processes to handle the traffic
+                                # NGINX automatically determines the optimal number of
+                                # worker processes based on the number of CPU cores available.
+
+events { }                      # Configuring event-related settings for handling connections
+                                # Empty block means default settings are used
+
+stream {                            # Configuring the stream module. Handling TCP or UDP streams
+    {% for dst in dest_array %}     # Looping through each destination in the dest_array list
+
     server {
-        listen {{ local_ports[loop.index0] }};
-        proxy_pass {{ dst }};
+        listen {{ local_ports[loop.index0] }};      # Listening on the port specified by local_ports
+                                                    # The port is dynamically set based on the loop index
+        proxy_pass {{ dst }};                       # Forwarding incoming traffic to the destination specified
+                                                    # by the dst variable. The dst variable is dynamically set
+                                                    # based on the loop index.
+
     }
+    
     server {
-        listen {{ local_ports[loop.index0] }} udp;
-        proxy_pass {{ dst }};
+        listen {{ local_ports[loop.index0] }} udp;  # Listening on the same port but for UDP traffic
+                                                    # The port is dynamically set based on the loop index
+        proxy_pass {{ dst }};                       # Forwarding incoming UDP traffic to the destination specified
+                                                    # by the dst variable. The dst variable is dynamically set
+                                                    # based on the loop index.
     }
-    {% endfor %}
+
+    {% endfor %}                         # End of the loop through dest_array
 }
