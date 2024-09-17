@@ -1,0 +1,107 @@
+•	Start the streamer-daq service (data acquisition):
+    
+        python build/python/streamer-daq/DAQStream.py --mode 1 --simulation_file data/
+tomo_00058_all_subsampled1p_s1079s1081.h5 --d_iteration 1 --publisher_addr tcp://*:50000 --iteration_sleep 1 --s
+ynch_addr tcp://*:50001 --synch_count 1
+
+    python /path/to/aps-mini-apps/build/python/streamer-daq/DAQStream.py \
+    --mode 1 \
+    --simulation_file /path/to/aps-mini-apps/data/tomo_00058_all_subsampled1p_s1079s1081.h5 \
+    --d_iteration 1 \
+    --publisher_addr tcp://*:50000 \
+    --iteration_sleep 1 \
+    --synch_addr tcp://*:50001 \
+    --synch_count 1
+
+    •	This service starts the data acquisition process. It simulates data acquisition from the tomo_00058_all_subsampled1p_s1079s1081.h5 file, which is an HDF5 file containing tomography data.
+	•	Publisher: The data is sent over a ZMQ (ZeroMQ) publisher socket on tcp://*:50000 (which listens for connections on port 50000).
+	•	Synchronization: Another ZMQ socket is created on tcp://*:50001 for synchronization purposes.
+	•	Simulation: The --iteration_sleep option controls how long the service waits between iterations of data transmission.
+	•	This service acts as the data source for the subsequent services.
+    
+
+
+•	Start the streamer-dist service (distribution):
+
+        python build/python/streamer-dist/ModDistStreamPubDemo.py --data_source_addr tcp://localhost:50000 --data_source_synch_addr tcp://localhost:50001 --cast_to_float32 --normalize --my_distributor_addr tcp://*:50010 --beg_sinogram 1000 --num_sinograms 2 --num_columns 2560
+
+    python /path/to/aps-mini-apps/build/python/streamer-dist/ModDistStreamPubDemo.py \
+    --data_source_addr tcp://localhost:50000 \
+    --data_source_synch_addr tcp://localhost:50001 \
+    --cast_to_float32 \
+    --normalize \
+    --my_distributor_addr tcp://*:50010 \
+    --beg_sinogram 1000 \
+    --num_sinograms 2 \
+    --num_columns 2560
+
+  	•	This service connects to the data stream from the streamer-daq service using the tcp://localhost:50000 address and receives the data.
+	•	Synchronization: It also connects to the synchronization stream on tcp://localhost:50001.
+	•	Processing the Data:
+	•	The data is cast to float32 (32-bit floating-point).
+	•	It is normalized before distribution.
+	•	It processes 2 sinograms, starting at sinogram 1000, and has 2560 columns.
+	•	Distribution: The processed data is then published on port 50010 (tcp://*:50010), making it available for further processing (e.g., for the SIRT service).
+
+
+
+•	Optionally, start the streamer-quality service:
+    python /path/to/aps-mini-apps/build/python/quality/iqcheck.py /path/to/input0 /path/to/input1
+
+	•	This service runs a data quality check between two inputs (/path/to/input0 and /path/to/input1).
+	•	It is optional and doesn’t interact directly with the data stream but is used to compare the quality of the two input files using metrics like image quality.
+	•	The tool might calculate metrics such as MSE (Mean Squared Error) or SSIM (Structural Similarity Index), depending on how it is set up.
+
+
+
+•	Start the streamer-sirt service (SIRT reconstruction):
+
+        build/bin/sirt_stream --write-freq 4 --dest-host localhost --dest-port 50010 --window-iter 1 --window-step 4 --window-length 4 -t 2 -c 1427 --pub-addr tcp://*:52000
+
+    /path/to/aps-mini-apps/build/bin/sirt_stream \
+    --write-freq 4 \
+    --dest-host localhost \
+    --dest-port 50010 \
+    --window-iter 1 \
+    --window-step 4 \
+    --window-length 4 \
+    -t 2 \
+    -c 1427 \
+    --pub-addr tcp://*:52000 \
+    # Optionally: --recon-output-dir /path/to/output
+
+	•	This service starts the SIRT (Simultaneous Iterative Reconstruction Technique) reconstruction process.
+	•	Receiving Data: It connects to the streamer-dist service on port 50010 (i.e., --dest-port 50010).
+	•	Reconstruction Process:
+	•	It reconstructs the data using the SIRT algorithm with a window iteration of 1, a window step of 4, and a window length of 4.
+	•	The number of threads is set to 2 (-t 2), and the center of rotation is set to 1427 (-c 1427).
+
+
+
+
+
+•	Output:
+	•	The service outputs reconstructed data at a frequency defined by --write-freq 4.
+	•	If you specify the --recon-output-dir flag, it saves the reconstruction results to the specified directory.
+	•	Publisher: The reconstructed data is published on port 52000 (tcp://*:52000), making it available for further consumption or processing.
+
+
+
+
+
+Dependencies Between Services:
+
+	•	streamer-daq must be running before streamer-dist, as streamer-dist connects to the data stream created by streamer-daq.
+	•	streamer-dist must be running before streamer-sirt, as streamer-sirt connects to the data distributed by streamer-dist.
+
+Final Flow:
+
+	1.	streamer-daq generates and streams data.
+	2.	streamer-dist receives the data, processes it, and redistributes it.
+	3.	streamer-sirt connects to the distributed data and performs iterative reconstruction.
+	4.	Optionally, streamer-quality checks the quality of the data between two inputs.
+
+
+
+
+
