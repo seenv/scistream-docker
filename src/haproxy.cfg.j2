@@ -1,3 +1,7 @@
+{#
+##### Commented
+#}
+
 global
     log /dev/log local0
     log /dev/log local1 notice
@@ -16,10 +20,43 @@ defaults
 
 {% for dst in dest_array %}
 frontend my_frontend_{{ loop.index }}
-    bind *:{{ local_ports[loop.index0] }}
+    # Each frontend is named uniquely based on the loop index
+    # (e.g., my_frontend_1, my_frontend_2).
+    bind *:{{ local_ports[loop.index0] }}       # The frontend binds to a port from the local_ports array.
     default_backend my_backend_{{ loop.index }}
 
 backend my_backend_{{ loop.index }}
-    server my_server {{ dst }}
+    # Each backend is named uniquely based on the loop index
+    server my_server {{ dst }}                  # The backend is configured to connect to the server address in dest_array.
 
 {% endfor %}
+
+
+{#
+##### Purpose:
+# This templated configuration file allows you to define multiple
+# frontends and backends dynamically, based on the values in dest_array
+# and local_ports. For example, if you have multiple servers and want
+# to configure HAProxy to route traffic to each of them on different ports,
+# this template will generate the necessary HAProxy configuration file
+# automatically.
+#}
+
+
+
+{#
+##### If you want to connect multiple clients to one server using HAProxy:
+frontend my_frontend
+    bind *:5001    # This will listen on port 5001 for client connections
+    default_backend my_backend
+
+backend my_backend
+    server my_server 192.168.0.26:7000  # The backend server's IP and port
+
+
+e,g.:
+backend my_backend
+    server server1 192.168.0.26:7000
+    server server2 192.168.0.27:7000
+    server server3 192.168.0.28:7000
+#}

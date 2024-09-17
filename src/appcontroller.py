@@ -1,12 +1,13 @@
+##### Commented
 # Usage appcontroller.py uid_value PROD localhost:5000
-import click
-import grpc
-import zmq
-import subprocess
+import click                    ##### Provides command-line interface (CLI) utilities to create commands and arguments
+import grpc                     ##### Used for remote procedure calls (RPC), secure communication with a service
+import zmq                      ##### Implements message passing (Publisher/Subscriber model) for data transfer
+import subprocess               ##### Handles system-level process management (e.g., starting other applications)
 import os
 import signal
 import time
-import socket
+import socket                   ##### Helps in managing network socket connections
 import sys
 import ipaddress
 from src.proto import scistream_pb2
@@ -28,6 +29,13 @@ def valid_ip(ip):
         return False
 
 class AppCtrl():
+    ##### The base controller class which manages communication with a gRPC service (s2cs) 
+    # using an authorization token (globus). Sends a “Hello” message (using gRPC),
+    # trying a few times if there’s a failure. After successfully sending the message,
+    # calls the method start_app() to launch an application (producer or consumer) 
+    # based on the role (PROD or consumer).
+	# In terms of Error Handling it retries for gRPC calls and checks for authentication
+    # or general connection errors.
     def __init__(self, uid, role, s2cs, access_token, controller_ip="127.0.0.1"):
         ## Maybe be a scistream notifier
         ## Actually mocking an app controller call here
@@ -69,7 +77,7 @@ class AppCtrl():
                 sys.exit(f"AppCtrl: Failed after {MAX_RETRIES} attempts.")
         self.start_app(role)
 
-    def kill_python_processes_on_port(self, port):
+    def kill_python_processes_on_port(self, port):  ##### Kills any Python process that is listening on a specific port
         try:
             result = subprocess.check_output(f"lsof -i :{port} -n | grep LISTEN | grep python | awk '{{print $2}}'", shell=True)
             pid = int(result.decode("utf-8").strip())
@@ -95,6 +103,11 @@ class AppCtrl():
             )
 
 class IperfCtrl(AppCtrl):
+    ##### A specialized version of AppCtrl that starts either an Iperf server 
+    # (for performance testing of network bandwidth) or an Iperf client
+    # (depending on the role). Iperf Server: The server listens on a specified 
+    # port for incoming Iperf client connections. Client: The client connects
+    # to the server and runs a network test to measure bandwidth.
     def start_app(self, role):
         if role == "PROD":
             producer_process = subprocess.Popen(["python", __file__, "iperf-server", "7000"])
@@ -108,6 +121,7 @@ class IperfCtrl(AppCtrl):
             )
 
 class MockCtrl(AppCtrl):
+    ##### A mock class that doesn’t perform any action (for testing purposes).
     def start_app(self, role):
         pass
 
@@ -116,6 +130,9 @@ class ProducerApplication():
         self.port=port
 
 class ZmqProd(ProducerApplication):
+    ##### Implements a ZeroMQ publisher. The producer binds to a given port
+    # and sends messages periodically. After sending 3600 messages, it
+    # sends a termination message NASDA:STOP.
     def __init__(self, port):
         self.port=port
         self.context = zmq.Context()
@@ -130,6 +147,9 @@ class ZmqProd(ProducerApplication):
         self.socket.send_string('NASDA:STOP')
 
 class ZmqConsumerApplication():
+    ##### Implements a ZeroMQ subscriber that connects to a specific address
+    # and waits for messages. It terminates when it receives the NASDA:STOP
+    # message, indicating that the transfer is complete.
     def __init__(self, target):
         self.context = zmq.Context()
         self.subscriber = self.context.socket(zmq.SUB)
@@ -153,6 +173,8 @@ def cli():
 @cli.command()
 @click.argument('target', type=str, default="127.0.0.1:7000")
 def subscribe(target):
+    ##### Starts a ZeroMQ subscriber (consumer) application to receive messages
+    # from a specified target (default: 127.0.0.1:7000).
     consumer = ZmqConsumerApplication(target=target)
     with open('cons.log', 'w') as f: f.write('consumer started')
     consumer.start()
@@ -160,17 +182,21 @@ def subscribe(target):
 @cli.command()
 @click.argument('port', type=str, default="7000")
 def run_producer(port):
+    ##### Starts a ZeroMQ producer on a given port (default: 7000)
     producer = ZmqProd(port=port)
     with open('prod.log', 'w') as f: f.write('producer started')
     producer.start()
 
 def check_if_port_in_use(port):
+    ##### Checks whether a port is already in use
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         return s.connect_ex(('localhost',int(port))) == 0
 
 @cli.command()
 @click.argument('port', type=str, default="7000")
 def iperf_server(port):
+    ##### Starts an Iperf server on the specified port. It will listen for
+    # incoming connections and run network bandwidth tests.
     if not check_if_port_in_use(port):
         cmds = ["iperf3", "-s", "-p", str(port)]
         with open('server_output.txt', 'w') as f:
@@ -186,6 +212,8 @@ def iperf_server(port):
 @cli.command()
 @click.argument('target', type=str, default="127.0.0.1:7000")
 def iperf_client(target):
+    ##### Starts an Iperf client, connecting to a server specified by
+    # target (IP and port). It will run bandwidth tests and report results
     try:
         server_ip, port = target.split(":")
         print("STARTING IPERF CLIENT with port:", str(port))
@@ -208,6 +236,8 @@ def iperf_client(target):
 @click.argument('role', type=str)
 @click.argument('controller_ip', type=str, default="127.0.0.1")
 def create_appctrl(uid, s2cs, access_token, role, controller_ip):
+    ##### Creates an IperfCtrl instance and starts an application,
+    # depending on the role.
     app_ctrl_instance = IperfCtrl(uid, role, s2cs, access_token, controller_ip)
     click.echo(f"Created IperfCtrl instance")
 
@@ -218,6 +248,7 @@ def create_appctrl(uid, s2cs, access_token, role, controller_ip):
 @click.argument('role', type=str)
 @click.argument('controller_ip', type=str, default="127.0.0.1")
 def mock(uid, s2cs, access_token, role, controller_ip):
+    ##### Creates a MockCtrl instance for testing.
     app_ctrl_instance = MockCtrl(uid, role, s2cs, access_token, controller_ip)
     click.echo(f"Created AppCtrl instance")
 
