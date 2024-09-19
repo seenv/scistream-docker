@@ -1,5 +1,0 @@
-[console_scripts]
-appctrl=src.appcontroller:cli
-s2cs=src.s2cs:main
-s2uc=src.s2uc:cli
-

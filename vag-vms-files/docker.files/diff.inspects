@@ -1,0 +1,66 @@
+1c1
+< vagrant@producers2:~$ docker inspect e2b96b82496d
+---
+> vagrant@consumers2:~$ docker inspect 1b981c9bb7dc
+4,5c4,5
+<         "Id": "e2b96b82496d14a470c9a62b1510010ae4fcf685c5c82628990ff880cb20cf82",
+<         "Created": "2024-09-03T22:30:53.254327491Z",
+---
+>         "Id": "1b981c9bb7dca27f80e48dead21cdad31b69878c0ff38001f944b6452c1751d8",
+>         "Created": "2024-09-03T23:23:25.471891258Z",
+19c19
+<             "Pid": 1830,
+---
+>             "Pid": 1865,
+22,23c22,23
+<             "StartedAt": "2024-09-04T21:44:31.915992156Z",
+<             "FinishedAt": "2024-09-04T18:57:48.696539479Z"
+---
+>             "StartedAt": "2024-09-04T21:47:12.116517584Z",
+>             "FinishedAt": "2024-09-04T18:57:40.663632859Z"
+26,29c26,29
+<         "ResolvConfPath": "/var/lib/docker/containers/e2b96b82496d14a470c9a62b1510010ae4fcf685c5c82628990ff880cb20cf82/resolv.conf",
+<         "HostnamePath": "/var/lib/docker/containers/e2b96b82496d14a470c9a62b1510010ae4fcf685c5c82628990ff880cb20cf82/hostname",
+<         "HostsPath": "/var/lib/docker/containers/e2b96b82496d14a470c9a62b1510010ae4fcf685c5c82628990ff880cb20cf82/hosts",
+<         "LogPath": "/var/lib/docker/containers/e2b96b82496d14a470c9a62b1510010ae4fcf685c5c82628990ff880cb20cf82/e2b96b82496d14a470c9a62b1510010ae4fcf685c5c82628990ff880cb20cf82-json.log",
+---
+>         "ResolvConfPath": "/var/lib/docker/containers/1b981c9bb7dca27f80e48dead21cdad31b69878c0ff38001f944b6452c1751d8/resolv.conf",
+>         "HostnamePath": "/var/lib/docker/containers/1b981c9bb7dca27f80e48dead21cdad31b69878c0ff38001f944b6452c1751d8/hostname",
+>         "HostsPath": "/var/lib/docker/containers/1b981c9bb7dca27f80e48dead21cdad31b69878c0ff38001f944b6452c1751d8/hosts",
+>         "LogPath": "/var/lib/docker/containers/1b981c9bb7dca27f80e48dead21cdad31b69878c0ff38001f944b6452c1751d8/1b981c9bb7dca27f80e48dead21cdad31b69878c0ff38001f944b6452c1751d8-json.log",
+135,138c135,138
+<                 "LowerDir": "/var/lib/docker/overlay2/67cdd49297e16324e6a1ef7206082c86aa8519307f11c25dc9538802e7c40aef-init/diff:/var/lib/docker/overlay2/f8b60316061297426fcefc710851cab043d5a9333a6b2a9d8b978a67cb8adffd/diff:/var/lib/docker/overlay2/af8a9d902b5f13b4c40eda0e5ee23aee87b63f3aa8d80c8ff58dea7dc3f01c9d/diff:/var/lib/docker/overlay2/5259f8a5909224fc8341f03d1a16971606d4978705467b3cd8f2ff38759bc62b/diff:/var/lib/docker/overlay2/869a69ac454152a35a1a75a3bf42d1ce4f30f037e161b57ec8a523812ea7f87a/diff:/var/lib/docker/overlay2/399c5b622973c04522b8d7243ff13c05ab3693e1340798a561b543d593d38f2a/diff:/var/lib/docker/overlay2/b6dd17c14455adf9ffd43cae6c8296b94143f2bcec98ed7fc26b18d5a73b3a52/diff",
+<                 "MergedDir": "/var/lib/docker/overlay2/67cdd49297e16324e6a1ef7206082c86aa8519307f11c25dc9538802e7c40aef/merged",
+<                 "UpperDir": "/var/lib/docker/overlay2/67cdd49297e16324e6a1ef7206082c86aa8519307f11c25dc9538802e7c40aef/diff",
+<                 "WorkDir": "/var/lib/docker/overlay2/67cdd49297e16324e6a1ef7206082c86aa8519307f11c25dc9538802e7c40aef/work"
+---
+>                 "LowerDir": "/var/lib/docker/overlay2/c3856c4201293eefa3f4032f4867f704b4275ad438432fff18fa460ae77f786a-init/diff:/var/lib/docker/overlay2/aeec663dbf1e82d39ce15c5ec300e1be7653dc329f428a5de5136e499e0b760c/diff:/var/lib/docker/overlay2/5b37239b861588c2f42e247bbe618b890eb238590e3f3b86d7881a1dd60f3f8d/diff:/var/lib/docker/overlay2/67643e81c518dee8b6468291d0c4e0a4788b7e1254a1c2b4b014aa126c7f9306/diff:/var/lib/docker/overlay2/043f1046778139670eae3db5aa15948709d7089f6aa655066a4c2cb8273a5c01/diff:/var/lib/docker/overlay2/f9a68e78be48979290a2303a7080fb9f56d462abb00cf0c7aca92296b17a2d58/diff:/var/lib/docker/overlay2/47642c8100b59b2a376848454e4bf3fb1c006a4145972c7bd0245dea458e700a/diff",
+>                 "MergedDir": "/var/lib/docker/overlay2/c3856c4201293eefa3f4032f4867f704b4275ad438432fff18fa460ae77f786a/merged",
+>                 "UpperDir": "/var/lib/docker/overlay2/c3856c4201293eefa3f4032f4867f704b4275ad438432fff18fa460ae77f786a/diff",
+>                 "WorkDir": "/var/lib/docker/overlay2/c3856c4201293eefa3f4032f4867f704b4275ad438432fff18fa460ae77f786a/work"
+145,146c145,146
+<                 "Source": "/home/vagrant/.scistream/haproxy.cfg",
+<                 "Destination": "/usr/local/etc/haproxy/haproxy.cfg",
+---
+>                 "Source": "/home/vagrant/.scistream/haproxy.cfg.j2",
+>                 "Destination": "/usr/local/etc/haproxy/haproxy.key",
+153,154c153,154
+<                 "Source": "/home/vagrant/.scistream/haproxy.cfg.j2",
+<                 "Destination": "/usr/local/etc/haproxy/haproxy.key",
+---
+>                 "Source": "/home/vagrant/.scistream/haproxy.cfg",
+>                 "Destination": "/usr/local/etc/haproxy/haproxy.cfg",
+161c161
+<             "Hostname": "producers2",
+---
+>             "Hostname": "consumers2",
+196c196
+<             "SandboxID": "68841f5b028587c62d2730a33dbd9cf8878860d62755541b3757b5471a6d7f00",
+---
+>             "SandboxID": "409c979fa770fa5323e75fa7c199220d5fdc56e08dee5b43db4eed2f727ef74d",
+219,220c219,220
+<                     "NetworkID": "2b97775fc05bb017ca2fdf02489b273158187ae3eb54f1ce90080b3dcbd218e6",
+<                     "EndpointID": "fb108bf7d56b9664f80cf1baf931c6538e76564c752964aa1cc685a5f625cef5",
+---
+>                     "NetworkID": "ab5f4bc63fb8cab5218dff70b1024d725238244c12aba12b5d8782c49d7095dc",
+>                     "EndpointID": "9faefdcbd1aea647fe39272f1a78321d6044f4cb74bfc7984e275e07f5d3ad00",

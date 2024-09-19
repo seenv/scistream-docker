@@ -1,0 +1,233 @@
+vagrant@consumers2:~$ docker inspect 1b981c9bb7dc
+[
+    {
+        "Id": "1b981c9bb7dca27f80e48dead21cdad31b69878c0ff38001f944b6452c1751d8",
+        "Created": "2024-09-03T23:23:25.471891258Z",
+        "Path": "docker-entrypoint.sh",
+        "Args": [
+            "haproxy",
+            "-f",
+            "/usr/local/etc/haproxy/haproxy.cfg"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 1865,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2024-09-04T21:47:12.116517584Z",
+            "FinishedAt": "2024-09-04T18:57:40.663632859Z"
+        },
+        "Image": "sha256:4e5bebb0fd91397c696f2406999242c603c6c08e1dccc8c5f8284d949b7c1cf5",
+        "ResolvConfPath": "/var/lib/docker/containers/1b981c9bb7dca27f80e48dead21cdad31b69878c0ff38001f944b6452c1751d8/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/1b981c9bb7dca27f80e48dead21cdad31b69878c0ff38001f944b6452c1751d8/hostname",
+        "HostsPath": "/var/lib/docker/containers/1b981c9bb7dca27f80e48dead21cdad31b69878c0ff38001f944b6452c1751d8/hosts",
+        "LogPath": "/var/lib/docker/containers/1b981c9bb7dca27f80e48dead21cdad31b69878c0ff38001f944b6452c1751d8/1b981c9bb7dca27f80e48dead21cdad31b69878c0ff38001f944b6452c1751d8-json.log",
+        "Name": "/myhaproxy",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "/home/vagrant/.scistream/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro",
+                "/home/vagrant/.scistream/haproxy.cfg.j2:/usr/local/etc/haproxy/haproxy.key:ro"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "host",
+            "PortBindings": null,
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/c3856c4201293eefa3f4032f4867f704b4275ad438432fff18fa460ae77f786a-init/diff:/var/lib/docker/overlay2/aeec663dbf1e82d39ce15c5ec300e1be7653dc329f428a5de5136e499e0b760c/diff:/var/lib/docker/overlay2/5b37239b861588c2f42e247bbe618b890eb238590e3f3b86d7881a1dd60f3f8d/diff:/var/lib/docker/overlay2/67643e81c518dee8b6468291d0c4e0a4788b7e1254a1c2b4b014aa126c7f9306/diff:/var/lib/docker/overlay2/043f1046778139670eae3db5aa15948709d7089f6aa655066a4c2cb8273a5c01/diff:/var/lib/docker/overlay2/f9a68e78be48979290a2303a7080fb9f56d462abb00cf0c7aca92296b17a2d58/diff:/var/lib/docker/overlay2/47642c8100b59b2a376848454e4bf3fb1c006a4145972c7bd0245dea458e700a/diff",
+                "MergedDir": "/var/lib/docker/overlay2/c3856c4201293eefa3f4032f4867f704b4275ad438432fff18fa460ae77f786a/merged",
+                "UpperDir": "/var/lib/docker/overlay2/c3856c4201293eefa3f4032f4867f704b4275ad438432fff18fa460ae77f786a/diff",
+                "WorkDir": "/var/lib/docker/overlay2/c3856c4201293eefa3f4032f4867f704b4275ad438432fff18fa460ae77f786a/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/home/vagrant/.scistream/haproxy.cfg.j2",
+                "Destination": "/usr/local/etc/haproxy/haproxy.key",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/vagrant/.scistream/haproxy.cfg",
+                "Destination": "/usr/local/etc/haproxy/haproxy.cfg",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "consumers2",
+            "Domainname": "",
+            "User": "haproxy",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "HAPROXY_VERSION=3.0.3",
+                "HAPROXY_URL=https://www.haproxy.org/download/3.0/src/haproxy-3.0.3.tar.gz",
+                "HAPROXY_SHA256=39a73c187a0b00d2602cb3ffca52d1b59d90f09032734fe8c03eb2e29a7d19df"
+            ],
+            "Cmd": [
+                "haproxy",
+                "-f",
+                "/usr/local/etc/haproxy/haproxy.cfg"
+            ],
+            "Image": "haproxy:latest",
+            "Volumes": {
+                "/usr/local/etc/haproxy/haproxy.cfg": {},
+                "/usr/local/etc/haproxy/haproxy.key": {}
+            },
+            "WorkingDir": "/var/lib/haproxy",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {},
+            "StopSignal": "SIGUSR1"
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "409c979fa770fa5323e75fa7c199220d5fdc56e08dee5b43db4eed2f727ef74d",
+            "SandboxKey": "/var/run/docker/netns/default",
+            "Ports": {},
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "host": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "MacAddress": "",
+                    "DriverOpts": null,
+                    "NetworkID": "ab5f4bc63fb8cab5218dff70b1024d725238244c12aba12b5d8782c49d7095dc",
+                    "EndpointID": "9faefdcbd1aea647fe39272f1a78321d6044f4cb74bfc7984e275e07f5d3ad00",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": null
+                }
+            }
+        }
+    }
+]
+
