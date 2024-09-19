@@ -1,0 +1,21 @@
+# files from:
+# scp vagrant@192.168.20.11:/usr/local/lib/python3.10/dist-packages/src/services/stunnel/Dockerfile ./vag-vm-files/Dockerfile.6
+
+
+## docker build -t stunnel-image .
+FROM alpine:latest
+RUN set -x \
+ && addgroup -S stunnel \
+ && adduser -S -G stunnel stunnel \
+ && apk add --update --no-cache \
+        ca-certificates \
+        libintl \
+        openssl \
+        stunnel
+
+RUN mkdir -p /etc/stunnel \
+ && chown -R stunnel:stunnel /etc/stunnel
+
+USER stunnel
+EXPOSE 443
+CMD ["stunnel"]
