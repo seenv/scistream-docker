@@ -11,8 +11,8 @@ RUN apt-get update && apt-get install netcat -y \
     python3-pip
 
 # Copy and install the Python wheel
-COPY scistream_docker-1.2.0-py3-none-any.whl /scistream_docker-1.2.0-py3-none-any.whl
-RUN pip3 install /scistream_docker-1.2.0-py3-none-any.whl
+COPY scistream_proto-1.2.2-py3-none-any.whl  /scistream_proto-1.2.2-py3-none-any.whl 
+RUN pip3 install /scistream_proto-1.2.2-py3-none-any.whl 
 
 # Run any other setup commands
 COPY prod.sh /prod.sh
