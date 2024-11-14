@@ -1,1 +1,1 @@
-# Docker Compose implementaion of the SciStream
+# Docker Compose implementation of the SciStream
