@@ -10,9 +10,9 @@ This repository contains the Docker Compose configuration for running SciStream.
 docker-compose up --build
 ```
 
-## Commands to Run in Each Container
+## Commands Running Order in Each Container
 
-### 1. `p2cs` (SciStream Control Server on the Producer Side)
+### 1. In `p2cs` Container (SciStream Control Server on the Producer Side):
 1. **Generate a private key:**
    ```bash
    openssl genrsa -out server.key 2048
@@ -56,7 +56,7 @@ docker-compose up --build
 
 ---
 
-### 2. `producer` Container
+### 2. In `producer` Container:
 1. **Copy the certificate from `/tmp`:**
    ```bash
    cp /tmp/server.crt ./
@@ -74,25 +74,20 @@ docker-compose up --build
 
 ---
 
-### 3. `c2cs` Container
-1. **Copy the certificate from `/tmp`:**
+### 3. In `c2cs` Container (SciStream Control Server on the Consumer Side):
+1. **Copy the certificate and key from `/tmp`:**
    ```bash
-   cp /tmp/server.crt ./
+   cp /tmp/server.crt /tmp/server.key ./
    ```
 
-2. **Specify the stream endpoint details:**
+2. **Start SciStream's control server:**
    ```bash
-   s2uc cons-req --s2cs 192.168.101.11:5007 --mock True &
-   ```
-
-3. **Start the application controller mock:**
-   ```bash
-   appctrl mock 4f8583bc-a4d3-11ee-9fd6-034d1fcbd7c3 192.168.101.11:5007 INVALID_TOKEN CONS 192.168.101.10
+   s2cs --verbose --port=5007 --listener-ip=192.168.102.10 --type=Haproxy
    ```
 
 ---
 
-### 4. `consumer` Container
+### 4. In `consumer` Container:
 1. **Copy the certificate from `/tmp`:**
    ```bash
    cp /tmp/server.crt ./
@@ -100,12 +95,12 @@ docker-compose up --build
 
 2. **Specify the stream endpoint details:**
    ```bash
-   s2uc cons-req --s2cs 192.168.102.11:5007 --mock True &
+   s2uc cons-req --s2cs 192.168.102.10:5007 4f8583bc-a4d3-11ee-9fd6-034d1fcbd7c3 192.168.101.10:5074 &
    ```
 
 3. **Start the application controller mock:**
    ```bash
-   appctrl mock 4f8583bc-a4d3-11ee-9fd6-034d1fcbd7c3 192.168.102.11:5007 INVALID_TOKEN CONS 192.168.102.10
+   appctrl mock 4f8583bc-a4d3-11ee-9fd6-034d1fcbd7c3 192.168.102.10:5007 INVALID_TOKEN PROD 192.168.101.10
    ```
 
 ---
