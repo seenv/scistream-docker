@@ -5,7 +5,7 @@ services:
     #build:
       #context: ./needs
       #dockerfile: Dockerfile.prod
-    image: seenv/scistream-docker:host-latest
+    image: seenv/scistream-host:latest
     container_name: producer
     privileged: true
     networks:
@@ -20,7 +20,7 @@ services:
     #build:
       #context: ./needs
       #dockerfile: Dockerfile.prods
-    image: seenv/scistream-docker:s2cs-latest
+    image: seenv/scistream-s2cs:latest
     container_name: p2cs
     privileged: true
     depends_on:
@@ -40,7 +40,7 @@ services:
     #build:
       #context: ./needs
       #dockerfile: Dockerfile.conss
-    image: seenv/scistream-docker:s2cs-latest
+    image: seenv/scistream-s2cs:latest
     container_name: c2cs
     privileged: true
     depends_on:
@@ -59,7 +59,7 @@ services:
     #build:
       #context: ./needs
       #dockerfile: Dockerfile.cons
-    image: seenv/scistream-docker:host-latest
+    image: seenv/scistream-host:latest
     container_name: consumer
     privileged: true
     depends_on:
