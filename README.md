@@ -1,6 +1,9 @@
 # Docker Compose Implementation of the SciStream
 
-This repository contains the Docker Compose configuration for running SciStream.
+This repository contains the Docker Compose configuration for running [SciStream](https://github.com/scistream/scistream-proto).
+Scistream is a framework and toolkit that aims to solve the problem of enabling high-speed (100Gbps+), memory-to-memory data streaming between scientific instruments and remote computing facilities. It addresses the challenges of streaming data in scientific environments where data producers (e.g., scientific instruments) and consumers (e.g., analysis applications) are often located in different institutions with distinct security domains.
+
+The goal is to replicate the Scistream implementations in docker containers to  evaluate and monitor its performance.
 
 ## Prerequisites
 - Ensure Docker is installed on your system.
@@ -112,6 +115,6 @@ The following networks are defined in the `docker-compose.yml` file:
 - **S2CS Network**: Subnet `192.168.101.0/24`
 - **Consumer Network**: Subnet `192.168.102.0/24`
 
-Ensure that your Docker environment supports these network configurations.
+Ensure that your Docker environment supports these network configurations, and also they don't have any conflicts with your current network configurations (IPs).
 
 ---
