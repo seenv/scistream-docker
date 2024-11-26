@@ -1,0 +1,139 @@
+Proxy name, my_frontend_1 , my_backend_1 , my_backend_1
+Server name, FRONTEND , my_server , BACKEND
+Current number of queued requests,  , 0 , 0
+Maximum number of queued requests observed,  , 0 , 0
+Current number of active sessions, 0 , 0 , 0
+Maximum number of concurrent sessions observed, 0 , 0 , 0
+Session limit, 524264 ,  , 52427
+Total number of sessions (connections) handled, 0 , 0 , 0
+Total bytes received, 0 , 0 , 0
+Total bytes sent, 0 , 0 , 0
+Denied requests due to security or rules, 0 ,  , 0
+Denied responses due to security or rules, 0 , 0 , 0
+Number of request errors, 0 ,  , 
+Number of connection errors with backend,  , 0 , 0
+Number of response errors from backend,  , 0 , 0
+Number of retries on backend,  , 0 , 0
+Number of redispatches to another backend,  , 0 , 0
+Current status, OPEN , no check , UP
+Server weight for load balancing,  , 1 , 1
+Number of active servers in the backend,  , 1 , 1
+Number of backup servers in the backend,  , 0 , 0
+Number of failed health checks,  ,  , 
+Number of times server was marked down,  ,  , 0
+Time since the last status change (seconds),  , 5302 , 5302
+Total downtime since start (seconds),  ,  , 0
+Maximum queue size,  ,  , 
+Process ID of HAProxy instance, 1 , 1 , 1
+Proxy ID, 2 , 3 , 3
+Server ID, 0 , 1 , 0
+Throttle percentage for slow starts,  ,  , 
+Total sessions via load balancing, 0 , 0 , 0
+Tracks another proxy's status,  ,  , 
+Proxy type, 0 , 2 , 1
+Sessions per second (last second), 0 , 0 , 0
+Configured session rate limit, 0 ,  , 
+Maximum observed session rate, 0 , 0 , 0
+Last health check status,  ,  , 
+Response code from last health check,  ,  , 
+Duration of last health check (ms),  ,  , 
+HTTP 1xx responses,  ,  , 
+HTTP 2xx responses,  ,  , 
+HTTP 3xx responses,  ,  , 
+HTTP 4xx responses,  ,  , 
+HTTP 5xx responses,  ,  , 
+Non-standard HTTP responses, 0 , 0 , 0
+Failed handshakes,  ,  , 
+Request rate (last second), 0 ,  , 
+Maximum observed request rate, 0 ,  , 
+Total requests handled, 0 ,  , 
+Client-side aborts, 0 , 0 , 0
+Server-side aborts, 0 , 0 , 0
+Bytes in for compression, 0 ,  , 0
+Bytes out after compression, 0 ,  , 0
+Bytes bypassed for compression, 0 ,  , 0
+Compressed responses, 0 ,  , 0
+Time since last session (seconds),  , -1 , -1
+last_chk,  ,  , 
+last_agt,  ,  , 
+Request time (ms),  , 0 , 0
+Connection time (ms),  , 0 , 0
+Response time (ms),  , 0 , 0
+Total time (ms),  , 0 , 0
+agent_status,  ,  , 
+agent_code,  ,  , 
+agent_duration,  ,  , 
+check_desc,  ,  , 
+agent_desc,  ,  , 
+check_rise,  ,  , 
+check_fall,  ,  , 
+check_health,  ,  , 
+agent_rise,  ,  , 
+agent_fall,  ,  , 
+agent_health,  ,  , 
+addr,  , 192.168.101.10:5074 , 
+cookie,  ,  , 
+mode, tcp , tcp , tcp
+algo,  ,  , roundrobin
+conn_rate, 0 ,  , 
+conn_rate_max, 0 ,  , 
+conn_tot, 0 ,  , 
+intercepted,  ,  , 
+dcon, 0 ,  , 
+dses, 0 ,  , 
+wrew, 0 , 0 , 0
+connect,  , 0 , 0
+reuse,  , 0 , 0
+cache_lookups,  ,  , 
+cache_hits,  ,  , 
+srv_icur,  , 0 , 
+src_ilim,  ,  , 
+qtime_max,  , 0 , 0
+ctime_max,  , 0 , 0
+rtime_max,  , 0 , 0
+ttime_max,  , 0 , 0
+eint, 0 , 0 , 0
+idle_conn_cur,  , 0 , 
+safe_conn_cur,  , 0 , 
+used_conn_cur,  , 0 , 
+need_conn_est,  , 0 , 
+uweight,  , 1 , 1
+agg_server_status,  ,  , 0
+agg_server_check_status,  ,  , 0
+agg_check_status,  ,  , 0
+srid,  , 0 , 
+sess_other, 0 ,  , 
+h1sess, 0 ,  , 
+h2sess, 0 ,  , 
+h3sess, 0 ,  , 
+req_other, 0 ,  , 
+h1req, 0 ,  , 
+h2req, 0 ,  , 
+h3req, 0 ,  , 
+proto,  ,  , 
+-, - , - , -
+ssl_sess, 0 , 0 , 0
+ssl_reused_sess, 0 , 0 , 0
+ssl_failed_handshake, 0 , 0 , 0
+h2_headers_rcvd, 0 ,  , 0
+h2_data_rcvd, 0 ,  , 0
+h2_settings_rcvd, 0 ,  , 0
+h2_rst_stream_rcvd, 0 ,  , 0
+h2_goaway_rcvd, 0 ,  , 0
+h2_detected_conn_protocol_errors, 0 ,  , 0
+h2_detected_strm_protocol_errors, 0 ,  , 0
+h2_rst_stream_resp, 0 ,  , 0
+h2_goaway_resp, 0 ,  , 0
+h2_open_connections, 0 ,  , 0
+h2_backend_open_streams, 0 ,  , 0
+h2_total_connections, 0 ,  , 0
+h2_backend_total_streams, 0 ,  , 0
+h1_open_connections, 0 ,  , 0
+h1_open_streams, 0 ,  , 0
+h1_total_connections, 0 ,  , 0
+h1_total_streams, 0 ,  , 0
+h1_bytes_in, 0 ,  , 0
+h1_bytes_out, 0 ,  , 0
+h1_spliced_bytes_in, 0 ,  , 0
+h1_spliced_bytes_out, 0 ,  , 0
+,  ,  , 

@@ -1,0 +1,9 @@
+{
+    "average_cpu_usage": 1.16,
+    "average_ram_usage": 8.1,
+    "average_disk_usage": 5.0,
+    "total_network_sent": 0.79,
+    "total_network_recv": 0.03,
+    "average_process_count": 869.6,
+    "physical_cores": 32
+}
