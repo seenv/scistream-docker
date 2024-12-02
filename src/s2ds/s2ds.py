@@ -16,3 +16,4 @@ def create_instance(instance_type: str, logger=None) -> Union[Haproxy, Nginx, St
     else:
         print(f"Unsupported instance type: {instance_type}")
         return None
+        

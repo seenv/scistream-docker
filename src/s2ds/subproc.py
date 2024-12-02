@@ -84,3 +84,4 @@ class HaproxySubprocess(AbstractSubprocess):
         super().__init__(logger)
         self.cfg_filename = "haproxy.cfg"
         self.command = ["haproxy", "-f"]
+        

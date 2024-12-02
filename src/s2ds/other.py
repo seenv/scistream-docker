@@ -14,6 +14,7 @@ class DockerPlugin:
     def __init__(self):
         self.client = docker.from_env()
 
+
     def start(self, name, container_config):
         try:
             container = self.client.containers.get(name)

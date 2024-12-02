@@ -16,14 +16,15 @@ def get_config_path():
         return config_path
     else:
         # If the environment variable is not set, use the default path
-        default_path = os.path.expanduser("~/.scistream")
+        #default_path = os.path.expanduser("~/.scistream")
+        default_path = '/tmp/.scistream'
 
         # Create the directory if it doesn't exist
         os.makedirs(default_path, exist_ok=True)
 
         # Create the file if it doesn't exist
-        if not os.path.exists(default_path):
-            open(default_path, "a").close()
+        if not os.path.exists(default_path):        # won't even execute! what's the purpose!
+            open(default_path, "a").close()         # double check?
 
         return default_path
 
@@ -71,9 +72,7 @@ class S2DS:
         if entry["s2ds_proc"] != []:
             for i, rem_proc in enumerate(entry["s2ds_proc"]):
                 rem_proc.terminate()  # TODO: Make sure s2ds buffer handles this signal gracefully
-                entry["s2ds_proc"][
-                    i
-                ] = rem_proc.pid  # Print out PID rather than Popen object
+                entry["s2ds_proc"][i] = rem_proc.pid  # Print out PID rather than Popen object
             self.logger.info(
                 f"Terminated {len(entry['s2ds_proc'])} S2DS subprocess(es)"
             )

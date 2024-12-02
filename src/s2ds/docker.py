@@ -43,12 +43,23 @@ class ProxyContainer:
         # Render the template to create the configuration file
         # renders file to a slightly different location
 
-        config_path = get_config_path()
+        #config_path = get_config_path()
+        config_path_x = get_config_path()       # adding a middle variable
+
+        if role == "PROD":                      # diffing between prod & cons config files (for docker imp)
+            os.makedirs(os.path.join(config_path_x, "prod"), exist_ok=True)
+            config_path = os.path.join(config_path_x, "prod")
+            vm_name = "p2cs"
+        else:
+            os.makedirs(os.path.join(config_path_x, "cons"), exist_ok=True)
+            config_path = os.path.join(config_path_x, "cons")
+            vm_name = "c2cs"
 
         with open(f"{config_path}/{self.cfg_filename}", "w") as f:
             f.write(template.render(vars))
         with open(f"{config_path}/{self.key_filename}", "w") as f:
             f.write("client1:" + uid.replace("-", ""))
+        
         # Define the container configuration
         container_config = {
             "image": self.image_name,
@@ -64,7 +75,8 @@ class ProxyContainer:
                     "mode": "ro",
                 },
             },
-            "network_mode": "host",
+            #"network_mode": "host",
+            'network_mode' : f"container:{vm_name}"     # naming containers based on the roles
         }
         # Start the proxy container
         name = self.container_name
@@ -73,14 +85,18 @@ class ProxyContainer:
 
 
 class Haproxy(ProxyContainer):
-    def __init__(self, service_plugin_type="docker"):
+    #def __init__(self, service_plugin_type="docker"):
+    def __init__(self, role, service_plugin_type="docker"):         # adding the role
         self.service_plugin_type = service_plugin_type
-        self.cfg_location = "/usr/local/etc/haproxy/haproxy.cfg"
-        self.key_location = "/usr/local/etc/haproxy/haproxy.key"
-        self.image_name = "haproxy:latest"
-        self.container_name = "myhaproxy"
-        self.cfg_filename = "haproxy.cfg"
-        self.key_filename = "haproxy.cfg.j2"
+        self.image_name = 'haproxy:latest'
+        if role == "PROD":
+            self.container_name = "myhaproxy-p2cs"
+        else:
+            self.container_name = "myhaproxy-c2cs"
+        self.cfg_location = '/usr/local/etc/haproxy/haproxy.cfg'
+        self.key_location = '/usr/local/etc/haproxy/haproxy.key'
+        self.cfg_filename = 'haproxy.cfg'
+        self.key_filename = 'haproxy.cfg.j2'
         if self.service_plugin_type == "dockersock":
             self.cfg_filename = "/data/scistream-demo/configs/haproxy.cfg"
         pass
