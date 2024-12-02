@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     haproxy \
     iperf3 \
     python3-pip \
+    vim \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the pyproject.toml and poetry.lock files into the container
