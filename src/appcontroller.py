@@ -27,6 +27,7 @@ def valid_ip(ip):
     except ValueError:
         return False
 
+
 class AppCtrl():
     def __init__(self, uid, role, s2cs, access_token, controller_ip="127.0.0.1"):
         ## Maybe be a scistream notifier

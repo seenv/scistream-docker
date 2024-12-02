@@ -146,7 +146,7 @@ def get_access_token(scope_id):
 
     return auth_data['access_token']
 
-def set_verbosity(self, verbose):
+def set_verbosity(self, verbose):                   
     self.logger = logging.getLogger(__name__)
     self.logger.setLevel(logging.DEBUG)
 

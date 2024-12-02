@@ -78,14 +78,16 @@ class S2CS(scistream_pb2_grpc.ControlServicer):
         )
         ##FIXTHIS start function should be the same for all implementations
         if self.type in ["StunnelSubprocess", "HaproxySubprocess"]:
-            self.s2ds = create_instance(self.type, self.logger)
+            #self.s2ds = create_instance(self.type, self.logger)
+            self.s2ds = create_instance(self.type, self.logger, request.role)  # adding the role
             ports = self.get_available_ports(request.num_conn)
             self.logger.debug(
                 f"Available ports: {ports}"
             )
             reply = self.s2ds.start(request.num_conn, self.listener_ip, ports)
         else:
-            self.s2ds = create_instance(self.type)
+            #self.s2ds = create_instance(self.type)
+            self.s2ds = create_instance(self.type, request.role)   # adding the role
             reply = self.s2ds.start(request.num_conn, self.listener_ip)
         self.resource_map[request.uid].update(reply)
         ##DEBUG message here show resource map

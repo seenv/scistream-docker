@@ -143,7 +143,7 @@ def release(uid, s2cs, server_cert, metadata=None):
 @click.option("--mock", default=False)
 @click.option("--scope", default="")
 @click.option("--remote_ip", default="localhost")
-@click.option(
+@click.option(                                        # need to do it dynamically
     "--receiver_ports",
     default="5074,5075,5076,37000,47000",
     help="Comma-separated list of receiver ports",
@@ -195,7 +195,7 @@ def inbound_request(
 @cli.command()
 @click.option("--num_conn", type=int, default=5)
 @click.option("--rate", type=int, default=10000)
-@click.option("--s2cs", default="localhost:5000")
+@click.option("--s2cs", default="localhost:5000")       # need to do it dynamically
 @click.option(
     "--server_cert", default="server.crt", help="Path to the server certificate file"
 )
@@ -231,13 +231,13 @@ def prod_req(num_conn, rate, s2cs, server_cert, mock, scope):
 @cli.command()
 @click.option("--num_conn", type=int, default=5)
 @click.option("--rate", type=int, default=10000)
-@click.option("--s2cs", default="localhost:6000")
+@click.option("--s2cs", default="localhost:6000")       # need to do it dynamically
 @click.option("--scope", default="")
 @click.option(
     "--server_cert", default="server.crt", help="Path to the server certificate file"
 )
 @click.option("--remote_ip", default="localhost")
-@click.option(
+@click.option(                                          # need to do it dynamically
     "--receiver_ports",
     default="5074,5075,5076,37000,47000",
     help="Comma-separated list of receiver ports",
