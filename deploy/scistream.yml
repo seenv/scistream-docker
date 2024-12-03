@@ -28,13 +28,13 @@
   tasks:
   - name: Copy the private key for the digital certificate to S2CS
     copy:
-      src: /vagrant/server.key
+      src: /vagrant/keys/server.key
       dest: /home/vagrant/server.key
       remote_src: yes
 
   - name: Copy the chain certificate for the digital certificate to S2CS
     copy:
-      src: /vagrant/server.crt
+      src: /vagrant/keys/server.crt
       dest: /home/vagrant/server.crt
       remote_src: yes
 
@@ -52,7 +52,7 @@
   tasks:
   - name: Copy the chain certificate for the digital certificate to S2CS
     copy:
-      src: /vagrant/server.crt
+      src: /vagrant/keys/server.crt
       dest: /home/vagrant/server.crt
       remote_src: yes
 
@@ -67,4 +67,4 @@
 
 
 
-# ansible-playbook -i hosts scistream.yml
+# ansible-playbook -i hosts deploy/scistream.yml
