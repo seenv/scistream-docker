@@ -1,0 +1,145 @@
+---
+- name: Test python packages
+  hosts: all
+  gather_facts: no
+  vars:
+    s2uc: /home/vagrant/.local/bin/s2uc
+    s2cs: /home/vagrant/.local/bin/s2cs
+  tasks:
+  - name: Run version commands and print output
+    ansible.builtin.command: "{{ item }}"
+    register: version_output
+    loop:
+      - "{{s2uc}} --version"
+      - "{{s2cs}} --version"
+    changed_when: false
+
+  - name: Display version information
+    ansible.builtin.debug:
+      msg: "{{ item.cmd }} output: {{ item.stdout }}"
+    loop: "{{ version_output.results }}"
+  - name: Copy the private key for the digital certificate to S2CS
+    copy:
+      src: /vagrant/keys/server.key
+      dest: /home/vagrant/server.key
+      remote_src: yes
+
+  - name: Copy the chain certificate for the digital certificate to S2CS
+    copy:
+      src: /vagrant/keys/server.crt
+      dest: /home/vagrant/server.crt
+      remote_src: yes
+
+- name: Start producers2
+  hosts: producers2
+  gather_facts: no
+  vars:
+    s2uc: /home/vagrant/.local/bin/s2uc
+    s2cs: /home/vagrant/.local/bin/s2cs
+  tasks:
+  - name: Start S2CS service
+    #ansible.builtin.command: "{{ s2cs }} --verbose --port=5007 --listener-ip=192.168.10.11 --type=Haproxy"
+    shell: "({{ s2cs }} --verbose --port=5007 --listener-ip=192.168.10.11 --type=Haproxy &)"
+    async: 10
+    poll: 0
+    register: producers2_s2cs_output
+    changed_when: false 
+
+- name: Start producer
+  hosts: producer
+  gather_facts: no
+  vars:
+    s2uc: /home/vagrant/.local/bin/s2uc
+    s2cs: /home/vagrant/.local/bin/s2cs
+    appctrl: /home/vagrant/.local/bin/appctrl
+  tasks:
+  - name: Run s2uc command on producer.
+    #ansible.builtin.command: "{{ s2uc }} prod-req --s2cs 192.168.10.11:5007 --mock True &"
+    shell: "({{ s2uc }} prod-req --s2cs 192.168.10.11:5007 --mock True &)"
+    async: 10
+    poll: 0
+    register: producer_s2uc_output
+  
+  - name: Check status of s2uc commands on producer.
+    async_status:
+      jid: "{{ producer_s2uc_output.ansible_job_id }}"
+    register: producer_s2uc_status
+    until: producer_s2uc_status.finished
+    retries: 1
+    delay: 1
+    failed_when:
+      - producer_s2uc_status.rc != 0
+      - "'error' in producer_s2uc_status.stdout | lower or 'error' in producer_s2uc_status.stderr | lower"
+
+  - name: Debug s2uc error if task failed.
+    when: producer_s2uc_status.rc != 0 or 'error' in producer_s2uc_status.stdout | lower or 'error' in producer_s2uc_status.stderr | lower
+    ansible.builtin.debug:
+      msg: 
+        - "STDOUT: {{ producer_s2uc_status.stdout }}"
+        - "STDERR: {{ producer_s2uc_status.stderr }}"
+        - "Return Code: {{ producer_s2uc_status.rc }}"
+
+  - name: Start the appcontroller.
+    #ansible.builtin.command: "{{ appctrl }} mock 4f8583bc-a4d3-11ee-9fd6-034d1fcbd7c3 192.168.10.11:5007 INVALID_TOKEN PROD 192.168.10.10"
+    shell: "({{ appctrl }} mock 4f8583bc-a4d3-11ee-9fd6-034d1fcbd7c3 192.168.10.11:5007 INVALID_TOKEN PROD 192.168.10.10 &)"
+    async: 10
+    poll: 0
+    register: producer_appctrl_output
+    changed_when: false
+
+  #- name: Display version information
+    #ansible.builtin.debug:
+      #msg: "{{ producer_appctrl_output.stdout }}"
+  
+- name: Start consumers2
+  hosts: consumers2
+  gather_facts: no
+  vars:
+    s2uc: /home/vagrant/.local/bin/s2uc
+    s2cs: /home/vagrant/.local/bin/s2cs
+  tasks:
+  - name: Start S2CS service
+    #ansible.builtin.command: "{{ s2cs }} --verbose --port=5007 --listener-ip=192.168.30.10 --type=Haproxy"
+    shell: "({{ s2cs }} --verbose --port=5007 --listener-ip=192.168.30.10 --type=Haproxy &)"
+    async: 10
+    poll: 0
+    register: consumers2_s2cs_output
+    changed_when: false
+
+- name: Start consumer
+  hosts: consumer
+  gather_facts: no
+  vars:
+    s2uc: /home/vagrant/.local/bin/s2uc
+    s2cs: /home/vagrant/.local/bin/s2cs
+    appctrl: /home/vagrant/.local/bin/appctrl
+  tasks:
+  - name: Run s2uc commands.
+    shell: "({{ s2uc }} cons-req --s2cs 192.168.30.10:5007 4f8583bc-a4d3-11ee-9fd6-034d1fcbd7c3 192.168.20.10:5074 &)"
+    async: 10
+    poll: 0
+    register: consumer_s2uc_output
+    #ansible.builtin.command: "{{ s2uc }} cons-req --s2cs 192.168.30.10:5007 4f8583bc-a4d3-11ee-9fd6-034d1fcbd7c3 192.168.20.10:5074 &"
+    #async: 300
+    #poll: 0
+
+  - name: Start the appcontroller.
+    #ansible.builtin.command: "{{ appctrl }} mock 4f8583bc-a4d3-11ee-9fd6-034d1fcbd7c3 192.168.30.10:5007 INVALID_TOKEN PROD 192.168.20.10"
+    shell: "({{ appctrl }} mock 4f8583bc-a4d3-11ee-9fd6-034d1fcbd7c3 192.168.30.10:5007 INVALID_TOKEN PROD 192.168.20.10 &)"
+    async: 10
+    poll: 0
+    register: consumer_appctrl_output
+    changed_when: false
+
+  #- name: Display version information
+    #ansible.builtin.debug:
+      #msg: "{{ consumer_appctrl_output.stdout }}"
+
+  #- name: Wait for s2uc to finish
+    #ansible.builtin.async_status:
+    #jid: "{{ producer_s2uc_output.ansible_job_id }}"
+    #register: async_poll_result
+    #until: async_poll_result.finished
+    #retries: 30
+    #delay: 10
+

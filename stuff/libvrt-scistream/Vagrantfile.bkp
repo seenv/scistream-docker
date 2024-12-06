@@ -1,0 +1,45 @@
+# Define the Vagrant configuration version
+Vagrant.configure("2") do |config|
+  # Define the base box (Ubuntu)
+  config.vm.box = "bento/ubuntu-22.04"
+
+  # Disable global network management by libvirt
+  #config.vm.provider :libvirt do |libvirt|
+  #  libvirt.management_network_device = "none"
+  #end
+
+  # Copy the wheel file to the VM
+  config.vm.provision "file", source: "docs/dist/scistream_proto-1.1.0-py3-none-any.whl", destination: "/home/vagrant/scistream_proto-1.1.0-py3-none-any.whl"
+
+  # Install packages and apps
+    config.vm.provision "shell", inline: <<-SHELL
+      sudo apt-get update
+      sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+      sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+      sudo apt-get update
+      sudo apt-get install -y docker-ce
+      sudo apt-get install -y iperf3
+      sudo usermod -aG docker vagrant
+      sudo apt-get install -y python3-pip
+      pip3 install scistream_proto-1.1.0-py3-none-any.whl
+    SHELL
+
+  # Define the producer VM
+  config.vm.define "producer" do |producer|
+    producer.vm.hostname = "producer"
+
+    #producer.vm.network "private_network", type: "dhcp"
+    # Set up a static IP for the producer VM
+    #producer.vm.network "private_network", ip: "192.168.110.110"
+    config.vm.provider "libvirt" do |libvirt|
+      libvirt.cpus = 4  # Allocating 4 CPUs
+      libvirt.memory = 2048  # Allocating 2048MB (2GB) of RAM
+      #libvirt.disk_bus = "virtio"  # Optional: specifying the disk bus for performance
+
+      #libvirt.storage_pool_name = "default"  # or any other pool that doesn't conflict
+      # Disable default NAT network
+      #libvirt.management_network_device = false
+    end
+  end
+end
