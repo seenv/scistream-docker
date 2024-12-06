@@ -29,6 +29,7 @@ def valid_ip(ip):
 
 class AppCtrl():
     def __init__(self, uid, role, s2cs, access_token, controller_ip="127.0.0.1"):
+        ## 4f8583bc-a4d3-11ee-9fd6-034d1fcbd7c3 192.168.10.11:5007 INVALID_TOKEN PROD 192.168.10.10
         ## Maybe be a scistream notifier
         ## Actually mocking an app controller call here
         # TODO catch connection error

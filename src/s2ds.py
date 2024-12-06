@@ -14,12 +14,16 @@ class S2DSException(Exception):
 # Haproxy
 # Nginx
 # Stunnel
-def create_instance(class_name):
+def create_instance(class_name, role):
+    print("ROLE INSIDE THE DS IS:   >>>>>>>>>>", role)
     try:
-        instance = eval(f"{class_name}()")
+        instance = eval(f"{class_name}('{role}')")
         return instance
     except NameError:
-         print(f"Class {class_name} is not defined.")
+        print(f"Class {class_name} is not defined.")
+    except SyntaxError as e:
+        print(f"Syntax error during class instantiation: {e}")
+        return None
     return create_instance(type)
 
 def get_haproxy_config_path():
@@ -31,7 +35,7 @@ def get_haproxy_config_path():
         return config_path
     else:
         # If the environment variable is not set, use the default path
-        default_path = os.path.expanduser('~/.scistream')
+        default_path = '/tmp/.scistream'
 
         # Create the directory if it doesn't exist
         os.makedirs(default_path, exist_ok=True)
@@ -89,6 +93,7 @@ from jinja2 import Environment, FileSystemLoader
 class ProxyContainer():
     def __init__(self, service_plugin_type="docker"):
         self.service_plugin_type = service_plugin_type
+        #self.cnt_init = 1
         pass
 
     def release(self, entry):
@@ -112,7 +117,7 @@ class ProxyContainer():
         vars = {
             'local_ports': self.local_ports,
             'dest_array': listeners,
-            'client': "yes" if role == "CONS" else "no"
+            'client': "yes" if role == "PROD" else "no"
         }
         # Load the Jinja2 environment and get the template
         env = Environment(loader=FileSystemLoader(f'{Path(__file__).parent}'))
@@ -120,38 +125,52 @@ class ProxyContainer():
         # Render the template to create the configuration file
         #renders file to a slightly different location
 
-        config_path = get_haproxy_config_path()
+        config_path_x = get_haproxy_config_path()
+        
+        if role == "PROD":
+            os.makedirs(os.path.join(config_path_x, "prod"), exist_ok=True)
+            config_path = os.path.join(config_path_x, "prod")
+            vm_name = "p2cs"
+        else:
+            os.makedirs(os.path.join(config_path_x, "cons"), exist_ok=True)
+            config_path = os.path.join(config_path_x, "cons")
+            vm_name = "c2cs"
 
         with open(f'{config_path}/{self.cfg_filename}', 'w') as f:
             f.write(template.render(vars))
         with open(f'{config_path}/{self.key_filename}', 'w') as f:
             f.write("client1:"+uid.replace("-", ""))
-        # Define the container configuration
+            
+
         container_config = {
             'image': self.image_name ,
             'name': self.container_name,
             'detach': True,
             'volumes': {
-                        f"{config_path}/{self.cfg_filename}": {'bind': self.cfg_location, 'mode': 'ro'},
-                        f"{config_path}/{self.key_filename}": {'bind': self.key_location, 'mode': 'ro'}
+                        f'{config_path}/{self.cfg_filename}': {'bind': self.cfg_location, 'mode': 'ro'},
+                        f'{config_path}/{self.key_filename}': {'bind': self.key_location, 'mode': 'ro'}
                         },
-            'network_mode': 'host'
+            'network_mode' : f"container:{vm_name}"
         }
+    
         # Start the proxy container
         name = self.container_name
-        
         docker_client.start(name, container_config)
 
- 
 class Haproxy(ProxyContainer):
-    def __init__(self, service_plugin_type="docker"):
+    def __init__(self, role, service_plugin_type="docker"):
         self.service_plugin_type = service_plugin_type
+        self.image_name = 'haproxy:latest'
+        if role == "PROD":
+            self.container_name = "myhaproxy-p2cs"
+        else:
+            self.container_name = "myhaproxy-c2cs"
         self.cfg_location = '/usr/local/etc/haproxy/haproxy.cfg'
         self.key_location = '/usr/local/etc/haproxy/haproxy.key'
-        self.image_name = 'haproxy:latest'
-        self.container_name = "myhaproxy"
         self.cfg_filename = 'haproxy.cfg'
         self.key_filename = 'haproxy.cfg.j2'
+
+        
         if self.service_plugin_type == "dockersock":
            self.cfg_filename = "/data/scistream-demo/configs/haproxy.cfg"
         pass
@@ -229,9 +248,15 @@ class JanusPlugin():
             print("JANUS CONTAINER EXIST")
         print(f"SESSION_ID = {session_id}")
         ## Container exists, now update config stop and start
-        cfg= Path(__file__).parent / "haproxy.cfg"
-        dest_path = Path("/data/scistream-demo/configs/haproxy.cfg")
+        if role == "PROD":
+            cfg= Path(__file__).parent / "haproxy-prod.cfg"
+            dest_path = Path("/data/scistream-demo/configs/haproxy.cfg")
+        else:
+            cfg= Path(__file__).parent / "haproxy-cons.cfg"
+            dest_path = Path("/data/scistream-demo/configs/haproxy.cfg")
+
         os.system(f'cp {cfg} {dest_path}')
+
         ## This assumes we are running this code in the same location as the docker platform
         stop_response = requests.put(url=f'https://nersc-srv-1.testbed100.es.net:5000/api/janus/controller/stop/{session_id}', auth=self.auth, verify=False)
         start_response = requests.put(url=f'https://nersc-srv-1.testbed100.es.net:5000/api/janus/controller/start/{session_id}', auth=self.auth, verify=False)

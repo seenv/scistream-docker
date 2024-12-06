@@ -1,0 +1,10 @@
+2024-05-01 19:44:01,657 DataConsumerController INFO: Starting hpc consumer 1
+2024-05-01 19:44:01,659 DataConsumerController INFO: Started hpc consumer 1
+2024-05-01 19:44:46,665 DataConsumerController INFO: Stopping hpc consumer 1
+{ 'consumerId': 1,
+  'inputChannel': 'pvapy:image',
+  'metadataStats': {},
+  'monitorStats': {'nOverruns': 292, 'nReceived': 98514, 'overrunRate': 7.8958Hz, 'receivedRate': 2663.8633Hz},
+  'processorStats': {'endTime': 1714592686.6656s, 'errorRate': 0.0Hz, 'firstObjectId': 1, 'firstObjectTime': 1714592649.6838s, 'lastObjectId': 126976, 'lastObjectTime': 1714592686.6655s, 'missedRate': 769.6795Hz, 'nErrors': 0, 'nMissed': 28464, 'nProcessed': 98512, 'processedRate': 2663.8092Hz, 'receivingTime': 36.9816s, 'runtime': 45.0062s, 'startTime': 1714592641.6594s},
+  'queueStats': {},
+  'userStats': {}}

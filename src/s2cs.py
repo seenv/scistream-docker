@@ -51,7 +51,8 @@ class S2CS(scistream_pb2_grpc.ControlServicer):
             "prod_listeners": []
         }
         self.logger.debug(f"Added key: '{request.uid}' with entry: {self.resource_map[request.uid]}")
-        self.s2ds=create_instance(self.type)
+        self.s2ds=create_instance(self.type, request.role)      #adding the role
+
         reply = self.s2ds.start(request.num_conn, self.listener_ip)
         self.resource_map[request.uid].update(reply)
         ##DEBUG message here show resource map

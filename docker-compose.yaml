@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  producer:
+    #build:
+      #context: ./needs
+      #dockerfile: Dockerfile.prod
+    image: seenv/scistream-host:latest
+    container_name: producer
+    privileged: true
+    networks:
+      producer_network:
+        ipv4_address: 192.168.100.10
+    volumes:
+      - /tmp:/tmp
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["/prod.sh"]
+
+  p2cs:
+    #build:
+      #context: ./needs
+      #dockerfile: Dockerfile.prods
+    image: seenv/scistream-s2cs:latest
+    container_name: p2cs
+    privileged: true
+    depends_on:
+      - producer
+    networks:
+      producer_network:
+        ipv4_address: 192.168.100.11
+      s2cs_network:
+        ipv4_address: 192.168.101.10
+    volumes:
+      - /tmp:/tmp
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["/prods.sh"]
+
+
+  c2cs:
+    #build:
+      #context: ./needs
+      #dockerfile: Dockerfile.conss
+    image: seenv/scistream-s2cs:latest
+    container_name: c2cs
+    privileged: true
+    depends_on:
+      - p2cs
+    networks:
+      s2cs_network:
+        ipv4_address: 192.168.101.11
+      consumer_network:
+        ipv4_address: 192.168.102.10
+    volumes:
+      - /tmp:/tmp
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["/conss.sh"]
+
+  consumer:
+    #build:
+      #context: ./needs
+      #dockerfile: Dockerfile.cons
+    image: seenv/scistream-host:latest
+    container_name: consumer
+    privileged: true
+    depends_on:
+      - c2cs
+    networks:
+      consumer_network:
+        ipv4_address: 192.168.102.11
+    volumes:
+      - /tmp:/tmp
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["/cons.sh"]
+
+
+networks:
+  producer_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.100.0/24
+
+  s2cs_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.101.0/24
+
+  consumer_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.102.0/24
