@@ -9,3 +9,4 @@ def check_port(ip, port):
         else:
             print(f"Port {port} on {ip} is available")
 
+
