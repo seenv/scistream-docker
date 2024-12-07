@@ -8,3 +8,4 @@ def check_port(ip, port):
             print(f"Port {port} on {ip} is not available")
         else:
             print(f"Port {port} on {ip} is available")
+
